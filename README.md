@@ -1,23 +1,21 @@
 # Node sagas 
-This is a repository for the `node-sagas` package.
-`node-sagas` is a convenient library for managing data consistency in a microservice architecture.
+This is a repository for the `node-sagas-orchestrator` package.
+`node-sagas-orchestrator` is a convenient library for managing data consistency in a microservice architecture.
 It helps create distributed transaction across services.
 
-Why Sagas?
+## Pattern
+This follows the **orchestrator** pattern, saga comes in different forms, this can be considered the simplest in-terms of infrastructure needed and code.
+You have your main component the orchestrator which handles the flow of the distributed transaction, it kicks of the chain of **steps** taken in the transactions
+and incase of failure it runs the compensations to return to a valid state.
 
-A distinctive characteristic of the microservice architecture is that in order to ensure loose coupling each service’s 
-data is private. Unlike in a monolithic application, you no longer have a single database that any module 
-of the application can update. As a result, one of the key challenges that you will face is maintaining
-data consistency across services.
-
-Please read more about [saga pattern](https://chrisrichardson.net/post/microservices/2019/07/09/developing-sagas-part-1.html).
+![alt text](image.png)
 
 ## Installing / Getting started
 
 This module is installed via npm::
 
 ```shell
-npm i --save node-sagas 
+npm i --save node-sagas-orchestrator
 ```
 
 ## Example
@@ -27,29 +25,27 @@ The first main class is `SagaBuilder`.
 ```typescript
   import { SagaBuilder } from 'node-sagas';
   
-  const sagaBuilder = new SagaBuilder<CreateOrderSagaParams>();
+  const sagaBuilder = new SagaBuilder();
   const saga = sagaBuilder
     .step('Create order')
-    .invoke((params: CreateOrderSagaParams) => {
+    .invoke(() => {
       // create order logic
     })
-    .withCompensation((params: CreateOrderSagaParams) => {
+    .withCompensation(() => {
       // reject order logic
     })
     .step('Reserve credit')
-    .invoke((params: CreateOrderSagaParams) => {
+    .invoke(() => {
       // reserve credit
     })
     .step('Approve order')
-    .invoke((params: CreateOrderSagaParams) => {
+    .invoke(() => {
       // approve order
     })
     .build();
 
-    const params = new CreateOrderSagaParams();
-
     try {
-      return await saga.execute(params);
+      return await saga.execute();
     } catch (e) {
       if (e instanceof SagaExecutionFailed) {
         // Throws, when invocation flow was failed, but compensation has been completed
@@ -63,36 +59,9 @@ The first main class is `SagaBuilder`.
 A step could be defined using `step()` method, for each step you can set an action for a positive 
 case with `invoke()` method. Also for each step, you can define compensation action with `withCompensation()` method.
 
-`SagaBuilder` class use generic class for the handler's params:
-```typescript
-export class CreateOrderSagaParams {
-  private orderId: number;
-  private customerId: number;
-
-  public getOrderId() {
-    return this.orderId;
-  }
-
-  public setOrderId(orderId) {
-    this.orderId = orderId;
-  }
-
-  public getCustomerId() {
-    return this.customerId;
-  }
-
-  public setCustomerId(customerId) {
-    this.customerId = customerId;
-  }
-}
-````
-That class represents scope with params between the steps. Also, an instance of that class will be returned 
-after the saga success execution.  
-
-## Links
-
-The article on Medium with a practical example will be prepared soon.
-
 ## Licensing
 
 The code in this project is licensed under MIT license.
+
+## References 
+- Kudos to the [originial repo](https://github.com/SlavaPanevskiy/node-sagas) 
