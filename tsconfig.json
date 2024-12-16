@@ -11,5 +11,5 @@
     "baseUrl": "./",
     "incremental": true
   },
-  "exclude": ["node_modules", "dist", "example", "src/tests"]
+  "exclude": ["node_modules", "dist", "example"]
 }
