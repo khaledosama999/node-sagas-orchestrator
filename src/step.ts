@@ -1,3 +1,5 @@
+import { SagaContext } from "./saga-context";
+
 export class Step<T> {
   private invocation: Function;
   private compensation: Function;
@@ -7,23 +9,23 @@ export class Step<T> {
     this.name = name;
   }
 
-  public setInvocation(method: (params: T) => Promise<void> | void): void {
+  public setInvocation(method: () => Promise<void> | void): void {
     this.invocation = method;
   }
 
-  public setCompensation(method: (params: T) => Promise<void> | void): void {
+  public setCompensation(method: () => Promise<void> | void): void {
     this.compensation = method;
   }
 
-  public async invoke(params: T): Promise<void> {
+  public async invoke(): Promise<void> {
     if (this.invocation) {
-      return this.invocation(params);
+      return this.invocation();
     }
   }
 
-  public async compensate(params: T): Promise<void> {
+  public async compensate(): Promise<void> {
     if (this.compensation) {
-      return this.compensation(params);
+      return this.compensation();
     }
   }
 

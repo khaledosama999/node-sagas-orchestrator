@@ -8,16 +8,16 @@ export class SagaFlow<T> {
     this.steps = steps;
   }
 
-  async invoke(params: T): Promise<void> {
+  async invoke(): Promise<void> {
     for (const step of this.steps) {
       this.compensationSteps.push(step);
-      await step.invoke(params);
+      await step.invoke();
     }
   }
 
-  async compensate(params: T): Promise<void> {
+  async compensate(): Promise<void> {
     for (const step of this.compensationSteps.reverse()) {
-      await step.compensate(params);
+      await step.compensate();
     }
   }
 }

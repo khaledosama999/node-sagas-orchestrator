@@ -1,10 +1,10 @@
 {
-  "name": "node-sagas",
-  "version": "0.0.6",
-  "description": "Library for handling distributed transactions in the microservices architecture",
+  "name": "node-sagas-orchestrator",
+  "version": "0.0.1",
+  "description": "Library for handling distributed transactions using an orchestrator ",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "author": "Viacheslav Panevskyi",
+  "author": "Khaled Osama",
   "license": "MIT",
   "scripts": {
     "build": "tsc",
@@ -36,7 +36,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/SlavaPanevskiy/node-sagas.git"
+    "url": "https://github.com/khaledosama999/node-sagas-orchestrator.git"
   },
   "keywords": [
     "saga",
@@ -45,6 +45,7 @@
     "microservices",
     "distributed transaction",
     "msa",
-    "microservice-architecture"
+    "microservice-architecture",
+    "orchestrator"
   ]
 }

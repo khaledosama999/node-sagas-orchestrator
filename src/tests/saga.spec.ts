@@ -1,11 +1,9 @@
 import { Saga, SagaStates } from '../saga';
-import { SagaParams } from './saga-params';
 import { SagaFlow } from '../saga-flow';
 import { SagaCompensationFailed, SagaExecutionFailed } from '../exceptions';
 
-const expectSagaFlowMethod = (sagaFlowMethod, sagaParams) => {
+const expectSagaFlowMethod = (sagaFlowMethod) => {
   expect(sagaFlowMethod).toHaveBeenCalledTimes(1);
-  expect(sagaFlowMethod).toHaveBeenCalledWith(sagaParams);
 };
 
 describe('Saga', () => {
@@ -29,14 +27,13 @@ describe('Saga', () => {
   test('execute with positive flow', async () => {
     sagaFlow.invoke = jest.fn();
     sagaFlow.compensate = jest.fn();
-    const sagaParams = new SagaParams();
 
-    const sagaPromise = saga.execute(sagaParams);
+    const sagaPromise = saga.execute();
     expect(saga.getState()).toBe(SagaStates.InProgress);
     await sagaPromise;
 
     expect(saga.getState()).toBe(SagaStates.Complete);
-    expectSagaFlowMethod(sagaFlow.invoke, sagaParams);
+    expectSagaFlowMethod(sagaFlow.invoke);
     expect(sagaFlow.compensate).not.toHaveBeenCalled();
   });
 
@@ -45,26 +42,24 @@ describe('Saga', () => {
     sagaFlow.invoke = jest.fn(() => Promise.reject(new Error()));
     sagaFlow.compensate = jest.fn();
     const saga = new Saga(sagaFlow);
-    const sagaParams = new SagaParams();
 
-    await expect(saga.execute(sagaParams)).rejects.toThrow(SagaExecutionFailed);
+    await expect(saga.execute()).rejects.toThrow(SagaExecutionFailed);
 
     expect(saga.getState()).toBe(SagaStates.CompensationComplete);
-    expectSagaFlowMethod(sagaFlow.invoke, sagaParams);
-    expectSagaFlowMethod(sagaFlow.compensate, sagaParams);
+    expectSagaFlowMethod(sagaFlow.invoke);
+    expectSagaFlowMethod(sagaFlow.compensate);
   });
 
   test('execute with compensation flow error', async () => {
     sagaFlow.invoke = jest.fn(() => Promise.reject(new Error()));
     sagaFlow.compensate = jest.fn(() => Promise.reject(new Error()));
-    const sagaParams = new SagaParams();
 
-    await expect(saga.execute(sagaParams)).rejects.toThrow(
+    await expect(saga.execute()).rejects.toThrow(
       SagaCompensationFailed,
     );
 
     expect(saga.getState()).toBe(SagaStates.CompensationError);
-    expectSagaFlowMethod(sagaFlow.invoke, sagaParams);
-    expectSagaFlowMethod(sagaFlow.compensate, sagaParams);
+    expectSagaFlowMethod(sagaFlow.invoke);
+    expectSagaFlowMethod(sagaFlow.compensate);
   });
 });

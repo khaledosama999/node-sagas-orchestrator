@@ -26,24 +26,23 @@ export class Saga<T> {
     return this.state;
   }
 
-  public async execute(params: T): Promise<T> {
+  public async execute(): Promise<void> {
     this.state = SagaStates.InProgress;
     try {
-      await this.sagaFlow.invoke(params);
+      await this.sagaFlow.invoke();
       this.state = SagaStates.Complete;
 
-      return params;
     } catch (e) {
       this.state = SagaStates.InCompensation;
       this.invokeError = e;
-      await this.runCompensationFlow(params);
+      await this.runCompensationFlow();
       throw new SagaExecutionFailed(e);
     }
   }
 
-  private async runCompensationFlow(params: T): Promise<void> {
+  private async runCompensationFlow(): Promise<void> {
     try {
-      await this.sagaFlow.compensate(params);
+      await this.sagaFlow.compensate();
       this.state = SagaStates.CompensationComplete;
     } catch (e) {
       this.state = SagaStates.CompensationError;

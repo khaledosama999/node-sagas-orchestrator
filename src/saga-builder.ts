@@ -1,6 +1,7 @@
 import { Step } from './step';
 import { Saga } from './saga';
 import Factory from './factory';
+import { SagaContext } from './saga-context';
 
 export class SagaBuilder<T> {
   private currentStep: Step<T>;
@@ -17,12 +18,12 @@ export class SagaBuilder<T> {
     return this;
   }
 
-  public invoke(method: (params: T) => Promise<void> | void): this {
+  public invoke(method: () => Promise<void> | void): this {
     this.currentStep.setInvocation(method);
     return this;
   }
 
-  public withCompensation(method: (params: T) => Promise<void> | void): this {
+  public withCompensation(method: () => Promise<void> | void): this {
     this.currentStep.setCompensation(method);
     return this;
   }

@@ -1,5 +1,4 @@
 import { Step } from '../step';
-import { SagaParams } from './saga-params';
 
 describe('Step', () => {
   test('construct', () => {
@@ -16,24 +15,22 @@ describe('Step', () => {
   });
 
   test('invoke', async () => {
-    const step = new Step<SagaParams>();
+    const step = new Step();
     const invocationMethod = jest.fn();
     step.setInvocation(invocationMethod);
-    const params = new SagaParams();
 
-    await step.invoke(params);
+    await step.invoke();
 
-    expect(invocationMethod).toHaveBeenCalledWith(params);
+    expect(invocationMethod).toHaveBeenCalledWith();
   });
 
   test('compensation', async () => {
-    const step = new Step<SagaParams>();
+    const step = new Step();
     const compensationMethod = jest.fn();
     step.setCompensation(compensationMethod);
-    const params = new SagaParams();
 
-    await step.compensate(params);
+    await step.compensate();
 
-    expect(compensationMethod).toHaveBeenCalledWith(params);
+    expect(compensationMethod).toHaveBeenCalledWith();
   });
 });
