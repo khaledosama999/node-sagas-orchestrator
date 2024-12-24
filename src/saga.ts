@@ -31,7 +31,6 @@ export class Saga<T> {
     try {
       await this.sagaFlow.invoke();
       this.state = SagaStates.Complete;
-
     } catch (e) {
       this.state = SagaStates.InCompensation;
       this.invokeError = e;

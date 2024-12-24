@@ -1,31 +1,56 @@
-import { SagaContext } from "./saga-context";
+import { SagaContextMediator } from './saga-context-mediator';
 
 export class Step<T> {
-  private invocation: Function;
-  private compensation: Function;
+  private invocation: (
+    sagaContextMediator: SagaContextMediator<T>,
+  ) => void | Promise<void>;
+  private compensation: (
+    sagaContextMediator: SagaContextMediator<T>,
+  ) => void | Promise<void>;
   private readonly name: string;
+  private key: string;
 
   constructor(name = '') {
     this.name = name;
   }
 
-  public setInvocation(method: () => Promise<void> | void): void {
+  public setInvocation(
+    method: (
+      sagaContextWrapper: SagaContextMediator<T>,
+    ) => Promise<void> | void,
+  ): void {
     this.invocation = method;
   }
 
-  public setCompensation(method: () => Promise<void> | void): void {
+  public setCompensation(
+    method: (
+      sagaContextWrapper: SagaContextMediator<T>,
+    ) => Promise<void> | void,
+  ): void {
     this.compensation = method;
   }
 
-  public async invoke(): Promise<void> {
+  public setKey(key: string) {
+    this.key = key;
+  }
+
+  public getKey() {
+    return this.key;
+  }
+
+  public async invoke(
+    sagaContextWrapper: SagaContextMediator<T>,
+  ): Promise<void> {
     if (this.invocation) {
-      return this.invocation();
+      return this.invocation(sagaContextWrapper);
     }
   }
 
-  public async compensate(): Promise<void> {
+  public async compensate(
+    sagaContextWrapper: SagaContextMediator<T>,
+  ): Promise<void> {
     if (this.compensation) {
-      return this.compensation();
+      return this.compensation(sagaContextWrapper);
     }
   }
 

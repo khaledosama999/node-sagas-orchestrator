@@ -1,6 +1,18 @@
+import { SagaContextMediator } from '../saga-context-mediator';
 import { Step } from '../step';
+import { SagaContext } from '../saga-context';
 
 describe('Step', () => {
+  const mockInitialValue = {
+    f1: jest.fn()
+  }
+
+  beforeEach(() => {
+    mockInitialValue.f1.mockClear()
+  })
+
+  const sagaContextMediator = new SagaContextMediator( new SagaContext([], mockInitialValue) )
+
   test('construct', () => {
     const step = new Step();
 
@@ -16,21 +28,24 @@ describe('Step', () => {
 
   test('invoke', async () => {
     const step = new Step();
-    const invocationMethod = jest.fn();
+    const invocationMethod = (sagaContextMediator: SagaContextMediator<{f1: Function}>) => 
+      sagaContextMediator.getContext().f1();
+
     step.setInvocation(invocationMethod);
+    await step.invoke(sagaContextMediator);
 
-    await step.invoke();
-
-    expect(invocationMethod).toHaveBeenCalledWith();
+    expect(mockInitialValue.f1).toHaveBeenCalledTimes(1);
   });
 
   test('compensation', async () => {
     const step = new Step();
-    const compensationMethod = jest.fn();
+    const compensationMethod =  (sagaContextMediator: SagaContextMediator<{f1: Function}>) => 
+      sagaContextMediator.getContext().f1();
+
     step.setCompensation(compensationMethod);
 
-    await step.compensate();
+    await step.compensate(sagaContextMediator);
 
-    expect(compensationMethod).toHaveBeenCalledWith();
+    expect(mockInitialValue.f1).toHaveBeenCalledTimes(1);
   });
 });

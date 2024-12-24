@@ -2,10 +2,10 @@ import { SagaBuilder } from '../saga-builder';
 import { Saga } from '../saga';
 
 describe('SagaBuilder', () => {
-  let sagaBuilder;
+  let sagaBuilder: SagaBuilder<{ key: string }>;
 
   beforeEach(() => {
-    sagaBuilder = new SagaBuilder();
+    sagaBuilder = new SagaBuilder<{ key: string }>();
   });
 
   it('should build saga', () => {
@@ -21,7 +21,9 @@ describe('SagaBuilder', () => {
   });
 
   it('should return builder instance on invoke', () => {
-    const builder = sagaBuilder.step().invoke(() => 'Invocation logic');
+    const builder = sagaBuilder.step().invoke(() => {
+      1 + 1;
+    });
 
     expect(builder).toBeInstanceOf(SagaBuilder);
   });
@@ -29,8 +31,32 @@ describe('SagaBuilder', () => {
   it('should return builder instance with compensation', () => {
     const builder = sagaBuilder
       .step()
-      .invoke(() => 'Invocation logic')
-      .withCompensation(() => 'Compensation logic');
+      .invoke(() => {
+        1 + 1;
+      })
+      .withCompensation(() => {
+        1 + 1;
+      });
+
+    expect(builder).toBeInstanceOf(SagaBuilder);
+  });
+
+  it('should return builder instance with key', () => {
+    const builder = sagaBuilder
+      .step()
+      .invoke(() => {
+        1 + 1;
+      })
+      .withCompensation(() => {
+        1 + 1;
+      })
+      .withKey('key');
+
+    expect(builder).toBeInstanceOf(SagaBuilder);
+  });
+
+  it('should return builder instance with context', () => {
+    const builder = sagaBuilder.setContext({ key: '1' });
 
     expect(builder).toBeInstanceOf(SagaBuilder);
   });

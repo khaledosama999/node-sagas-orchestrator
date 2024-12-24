@@ -1,15 +1,16 @@
 import { Step } from '../step';
 import { SagaFlow } from '../saga-flow';
+import { SagaContext } from '../saga-context';
 
 const expectInvokeBehavior = (stepMock) => {
   expect(stepMock.invoke).toHaveBeenCalledTimes(1);
 };
 
-const expectStepsBehavior = (stepMock1, stepMock2, ) => {
-  expectInvokeBehavior(stepMock1 );
+const expectStepsBehavior = (stepMock1, stepMock2) => {
+  expectInvokeBehavior(stepMock1);
   expect(stepMock1.compensate).toHaveBeenCalledTimes(1);
 
-  expectInvokeBehavior(stepMock2, );
+  expectInvokeBehavior(stepMock2);
   expect(stepMock2.compensate).toHaveBeenCalledTimes(1);
 };
 
@@ -52,6 +53,32 @@ describe('Saga Flow', () => {
     expect(executionOrder).toEqual([1, 2]);
   });
 
+  test('execute with positive flow without skipped steps', async () => {
+    const executionOrder: number[] = [];
+
+    const key = 'key';
+    const stepMock1 = new Step();
+    stepMock1.invoke = jest.fn(async () => {
+      executionOrder.push(1);
+    });
+    stepMock1.setKey(key);
+
+    const stepMock2 = new Step();
+    stepMock2.invoke = jest.fn(async () => {
+      executionOrder.push(2);
+    });
+
+    const ctx = new SagaContext([stepMock1, stepMock2]);
+    ctx.disableStep(key);
+    const saga = new SagaFlow([stepMock1, stepMock2], ctx);
+
+    await saga.invoke();
+
+    expect(stepMock1.invoke).toHaveBeenCalledTimes(0);
+    expectInvokeBehavior(stepMock2);
+    expect(executionOrder).toEqual([2]);
+  });
+
   test('execute with compensation flow', async () => {
     const executionOrder: number[] = [];
     const stepMock1 = new Step();
@@ -75,7 +102,7 @@ describe('Saga Flow', () => {
     await expect(saga.invoke()).rejects.toEqual(new Error());
     await saga.compensate();
 
-    expectStepsBehavior(stepMock1, stepMock2, );
+    expectStepsBehavior(stepMock1, stepMock2);
     expect(executionOrder).toEqual([1, 2, 3, 4]);
   });
 
@@ -102,7 +129,7 @@ describe('Saga Flow', () => {
 
     await expect(saga.invoke()).rejects.toEqual(new Error());
     await expect(saga.compensate()).rejects.toEqual(new Error());
-    expectStepsBehavior(stepMock1, stepMock2, );
+    expectStepsBehavior(stepMock1, stepMock2);
     expect(executionOrder).toEqual([1, 2, 3, 4]);
   });
 });

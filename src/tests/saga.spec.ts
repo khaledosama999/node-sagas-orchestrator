@@ -54,9 +54,7 @@ describe('Saga', () => {
     sagaFlow.invoke = jest.fn(() => Promise.reject(new Error()));
     sagaFlow.compensate = jest.fn(() => Promise.reject(new Error()));
 
-    await expect(saga.execute()).rejects.toThrow(
-      SagaCompensationFailed,
-    );
+    await expect(saga.execute()).rejects.toThrow(SagaCompensationFailed);
 
     expect(saga.getState()).toBe(SagaStates.CompensationError);
     expectSagaFlowMethod(sagaFlow.invoke);

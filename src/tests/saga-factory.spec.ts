@@ -2,12 +2,14 @@ import { Saga } from '../saga';
 import Factory from '../factory';
 import { Step } from '../step';
 import { SagaFlow } from '../saga-flow';
+import { SagaContext } from '../saga-context';
 
 describe('Saga factory', () => {
   test('createSaga', () => {
-    const sagaFactory = new Factory();
+    const sagaFactory = new Factory<{ key: string }>();
+    const ctx = new SagaContext<{ key: string }>([], { key: '1' });
 
-    expect(sagaFactory.createSaga([])).toBeInstanceOf(Saga);
+    expect(sagaFactory.createSaga([], ctx)).toBeInstanceOf(Saga);
   });
 
   test('createStep', () => {
@@ -18,7 +20,8 @@ describe('Saga factory', () => {
 
   test('createSagaFlow', () => {
     const sagaFactory = new Factory();
+    const ctx = new SagaContext<{ key: string }>([], { key: '1' });
 
-    expect(sagaFactory.createSagaFlow([])).toBeInstanceOf(SagaFlow);
+    expect(sagaFactory.createSagaFlow([], ctx)).toBeInstanceOf(SagaFlow);
   });
 });

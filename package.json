@@ -1,6 +1,6 @@
 {
   "name": "node-sagas-orchestrator",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Library for handling distributed transactions using an orchestrator ",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

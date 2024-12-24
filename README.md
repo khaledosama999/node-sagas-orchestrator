@@ -18,7 +18,7 @@ This module is installed via npm::
 npm i --save node-sagas-orchestrator
 ```
 
-## Example
+## Main use case
 
 This package provides you with main classes for creating sagas.
 The first main class is `SagaBuilder`. 
@@ -27,18 +27,32 @@ The first main class is `SagaBuilder`.
   
   const sagaBuilder = new SagaBuilder();
   const saga = sagaBuilder
+    .setContext({
+      key1: true,
+      key2: 1
+    })
     .step('Create order')
-    .invoke(() => {
+    .withKey('CREATE_ORDER')
+    .invoke((sagaContextMediator: SagaContextMediator) => {
+      const key1 = sagaContextMediator.getContext().key1;
+
+      sagaContextMediator.setContext({
+        key1: false,
+        key2: 2
+      })
+
       // create order logic
     })
     .withCompensation(() => {
       // reject order logic
     })
     .step('Reserve credit')
+    .withKey('RESERVE_CREDIT')
     .invoke(() => {
       // reserve credit
     })
     .step('Approve order')
+    .withKey('APPROVE_ORDER')
     .invoke(() => {
       // approve order
     })
@@ -58,6 +72,16 @@ The first main class is `SagaBuilder`.
 
 A step could be defined using `step()` method, for each step you can set an action for a positive 
 case with `invoke()` method. Also for each step, you can define compensation action with `withCompensation()` method.
+
+There is a state class which is shared across all steps (invocation and compensation), it's represented by the `SagaContextMediator` class
+
+| Function | Description
+|------|------|
+|disableStep| Disables a step by key, meaning it's invocation function won't be called|
+|enableStep| Re-enables a step by key|
+|isStepDisable| returns a boolean to indicate if a function is disable by key|
+|getContext| returns the current context value
+|setContext| overwrites the current context value
 
 ## Licensing
 

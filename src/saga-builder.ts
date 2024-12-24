@@ -3,10 +3,11 @@ import { Saga } from './saga';
 import Factory from './factory';
 import { SagaContext } from './saga-context';
 
-export class SagaBuilder<T> {
+export class SagaBuilder<T extends {} = null> {
   private currentStep: Step<T>;
   private steps: Step<T>[] = [];
   private factory = new Factory<T>();
+  private context: T;
 
   public setFactory(factory: Factory<T>) {
     this.factory = factory;
@@ -28,7 +29,18 @@ export class SagaBuilder<T> {
     return this;
   }
 
+  public withKey(key: string) {
+    this.currentStep.setKey(key);
+    return this;
+  }
+
+  public setContext(ctx: T) {
+    this.context = ctx;
+    return this;
+  }
+
   public build(): Saga<T> {
-    return this.factory.createSaga(this.steps);
+    const ctx = new SagaContext(this.steps, this.context);
+    return this.factory.createSaga(this.steps, ctx);
   }
 }

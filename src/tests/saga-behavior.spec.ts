@@ -2,18 +2,18 @@ import { SagaBuilder } from '../saga-builder';
 import { SagaStates } from '../saga';
 import { SagaExecutionFailed } from '../exceptions';
 
-const fakeInvoke1 = jest.fn()
-const fakeInvoke2 = jest.fn()
-const fakeInvoke3 = jest.fn()
-const fakeCompensation = jest.fn()
+const fakeInvoke1 = jest.fn();
+const fakeInvoke2 = jest.fn();
+const fakeInvoke3 = jest.fn();
+const fakeCompensation = jest.fn();
 
 describe('Saga functionality', () => {
   beforeEach(() => {
-    fakeInvoke1.mockClear()
-    fakeInvoke2.mockClear()
-    fakeInvoke3.mockClear()
-    fakeCompensation.mockClear()
-  })
+    fakeInvoke1.mockClear();
+    fakeInvoke2.mockClear();
+    fakeInvoke3.mockClear();
+    fakeCompensation.mockClear();
+  });
 
   it('should build and execute saga with invocation steps', async () => {
     const sagaBuilder = new SagaBuilder();
@@ -27,9 +27,9 @@ describe('Saga functionality', () => {
       .build();
 
     await saga.execute();
-    expect(fakeInvoke1).toHaveBeenCalledTimes(1)
-    expect(fakeInvoke2).toHaveBeenCalledTimes(1)
-    expect(fakeInvoke3).toHaveBeenCalledTimes(1)
+    expect(fakeInvoke1).toHaveBeenCalledTimes(1);
+    expect(fakeInvoke2).toHaveBeenCalledTimes(1);
+    expect(fakeInvoke3).toHaveBeenCalledTimes(1);
     expect(saga.getState()).toBe(SagaStates.Complete);
   });
 
@@ -40,19 +40,17 @@ describe('Saga functionality', () => {
       .invoke(fakeInvoke1)
       .withCompensation(fakeCompensation)
       .step()
-      .invoke(fakeInvoke2      )
+      .invoke(fakeInvoke2)
       .step()
       .invoke(() => {
         throw new Error();
       })
       .build();
 
-    await expect(saga.execute()).rejects.toThrow(
-      SagaExecutionFailed,
-    );
+    await expect(saga.execute()).rejects.toThrow(SagaExecutionFailed);
     expect(saga.getState()).toBe(SagaStates.CompensationComplete);
-    expect(fakeInvoke1).toHaveBeenCalledTimes(1)
-    expect(fakeCompensation).toHaveBeenCalledTimes(1)
-    expect(fakeInvoke2).toHaveBeenCalledTimes(1)
+    expect(fakeInvoke1).toHaveBeenCalledTimes(1);
+    expect(fakeCompensation).toHaveBeenCalledTimes(1);
+    expect(fakeInvoke2).toHaveBeenCalledTimes(1);
   });
 });
