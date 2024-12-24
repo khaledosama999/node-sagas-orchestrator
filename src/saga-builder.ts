@@ -2,6 +2,7 @@ import { Step } from './step';
 import { Saga } from './saga';
 import Factory from './factory';
 import { SagaContext } from './saga-context';
+import { SagaContextMediator } from './saga-context-mediator';
 
 export class SagaBuilder<T extends {} = null> {
   private currentStep: Step<T>;
@@ -19,12 +20,12 @@ export class SagaBuilder<T extends {} = null> {
     return this;
   }
 
-  public invoke(method: () => Promise<void> | void): this {
+  public invoke(method: (sagaContextMediator :SagaContextMediator) => Promise<void> | void): this {
     this.currentStep.setInvocation(method);
     return this;
   }
 
-  public withCompensation(method: () => Promise<void> | void): this {
+  public withCompensation(method: (sagaContextMediator :SagaContextMediator) => Promise<void> | void): this {
     this.currentStep.setCompensation(method);
     return this;
   }
