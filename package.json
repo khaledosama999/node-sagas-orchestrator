@@ -1,6 +1,6 @@
 {
   "name": "node-sagas-orchestrator",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Library for handling distributed transactions using an orchestrator ",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -17,7 +17,6 @@
     "version": "npm run format",
     "postversion": "git push && git push --tags"
   },
-  "dependencies": {},
   "devDependencies": {
     "@types/jest": "^25.2.1",
     "@typescript-eslint/eslint-plugin": "^2.27.0",

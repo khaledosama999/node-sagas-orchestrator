@@ -20,12 +20,12 @@ export class SagaBuilder<T extends {} = null> {
     return this;
   }
 
-  public invoke(method: (sagaContextMediator :SagaContextMediator) => Promise<void> | void): this {
+  public invoke(method: (sagaContextMediator :SagaContextMediator<T>) => Promise<void> | void): this {
     this.currentStep.setInvocation(method);
     return this;
   }
 
-  public withCompensation(method: (sagaContextMediator :SagaContextMediator) => Promise<void> | void): this {
+  public withCompensation(method: (sagaContextMediator :SagaContextMediator<T>) => Promise<void> | void): this {
     this.currentStep.setCompensation(method);
     return this;
   }
