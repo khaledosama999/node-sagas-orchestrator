@@ -4,7 +4,7 @@ import Factory from './factory';
 import { SagaContext } from './saga-context';
 import { SagaContextMediator } from './saga-context-mediator';
 
-export class SagaBuilder<T extends {} = null> {
+export class SagaBuilder<T extends object = null> {
   private currentStep: Step<T>;
   private steps: Step<T>[] = [];
   private factory = new Factory<T>();
@@ -20,12 +20,20 @@ export class SagaBuilder<T extends {} = null> {
     return this;
   }
 
-  public invoke(method: (sagaContextMediator :SagaContextMediator<T>) => Promise<void> | void): this {
+  public invoke(
+    method: (
+      sagaContextMediator: SagaContextMediator<T>,
+    ) => Promise<void> | void,
+  ): this {
     this.currentStep.setInvocation(method);
     return this;
   }
 
-  public withCompensation(method: (sagaContextMediator :SagaContextMediator<T>) => Promise<void> | void): this {
+  public withCompensation(
+    method: (
+      sagaContextMediator: SagaContextMediator<T>,
+    ) => Promise<void> | void,
+  ): this {
     this.currentStep.setCompensation(method);
     return this;
   }

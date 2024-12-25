@@ -1,6 +1,6 @@
 import { Saga, SagaStates } from '../saga';
 import { SagaFlow } from '../saga-flow';
-import { SagaCompensationFailed, SagaExecutionFailed } from '../exceptions';
+import { SagaCompensationFailed, SagaExecutionFailed } from '../exceptions/index';
 
 const expectSagaFlowMethod = (sagaFlowMethod) => {
   expect(sagaFlowMethod).toHaveBeenCalledTimes(1);

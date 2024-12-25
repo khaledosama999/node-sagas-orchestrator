@@ -1,6 +1,6 @@
 import { SagaBuilder } from '../saga-builder';
 import { SagaStates } from '../saga';
-import { SagaExecutionFailed } from '../exceptions';
+import { SagaExecutionFailed } from '../exceptions/index';
 
 const fakeInvoke1 = jest.fn();
 const fakeInvoke2 = jest.fn();

@@ -3,7 +3,7 @@ import { SagaFlow } from './saga-flow';
 import { Saga } from './saga';
 import { SagaContext } from './saga-context';
 
-export default class Factory<T> {
+export default class Factory<T extends object = null> {
   public createSaga(steps: Step<T>[], ctx: SagaContext<T>): Saga<T> {
     return new Saga<T>(this.createSagaFlow(steps, ctx));
   }

@@ -22,7 +22,7 @@ describe('SagaBuilder', () => {
 
   it('should return builder instance on invoke', () => {
     const builder = sagaBuilder.step().invoke(() => {
-      1 + 1;
+      Promise.resolve()
     });
 
     expect(builder).toBeInstanceOf(SagaBuilder);
@@ -32,10 +32,10 @@ describe('SagaBuilder', () => {
     const builder = sagaBuilder
       .step()
       .invoke(() => {
-        1 + 1;
+       Promise.resolve()
       })
       .withCompensation(() => {
-        1 + 1;
+       Promise.resolve()
       });
 
     expect(builder).toBeInstanceOf(SagaBuilder);
@@ -45,10 +45,10 @@ describe('SagaBuilder', () => {
     const builder = sagaBuilder
       .step()
       .invoke(() => {
-        1 + 1;
+       Promise.resolve()
       })
       .withCompensation(() => {
-        1 + 1;
+       Promise.resolve()
       })
       .withKey('key');
 

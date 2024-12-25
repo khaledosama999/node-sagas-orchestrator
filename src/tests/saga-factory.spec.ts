@@ -19,7 +19,7 @@ describe('Saga factory', () => {
   });
 
   test('createSagaFlow', () => {
-    const sagaFactory = new Factory();
+    const sagaFactory = new Factory<{key: string}>();
     const ctx = new SagaContext<{ key: string }>([], { key: '1' });
 
     expect(sagaFactory.createSagaFlow([], ctx)).toBeInstanceOf(SagaFlow);

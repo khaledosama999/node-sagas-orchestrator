@@ -390,3 +390,6 @@ Temporary Items
 docker-compose.yml
 .env
 dist
+
+.rollup.cache
+build/**/*

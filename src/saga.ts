@@ -1,5 +1,8 @@
 import { SagaFlow } from './saga-flow';
-import { SagaCompensationFailed, SagaExecutionFailed } from './exceptions';
+import {
+  SagaCompensationFailed,
+  SagaExecutionFailed,
+} from './exceptions/index';
 
 export enum SagaStates {
   New = 'New',
@@ -10,7 +13,7 @@ export enum SagaStates {
   CompensationError = 'Compensation error',
 }
 
-export class Saga<T> {
+export class Saga<T extends object = null> {
   private sagaFlow: SagaFlow<T>;
 
   private state: string;

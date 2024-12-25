@@ -1,13 +1,13 @@
 import { SagaContext } from './saga-context';
 
-export class SagaContextMediator<T extends {} = null> {
+export class SagaContextMediator<T extends object = null> {
   constructor(private readonly sagaContext: SagaContext<T>) {}
 
   /**
    * Disable step given it's key
-   * 
-   * @param key 
-   * @returns 
+   *
+   * @param key
+   * @returns
    */
   public disableStep(key: string) {
     return this.sagaContext.disableStep(key);
@@ -15,8 +15,8 @@ export class SagaContextMediator<T extends {} = null> {
 
   /**
    * Re-enables the step by it's given key
-   * @param key 
-   * @returns 
+   * @param key
+   * @returns
    */
   public enableStep(key: string) {
     return this.sagaContext.enableStep(key);
@@ -28,8 +28,8 @@ export class SagaContextMediator<T extends {} = null> {
 
   /**
    * Returns the current context value
-   * 
-   * @returns 
+   *
+   * @returns
    */
   public getContext() {
     return this.sagaContext.context;
@@ -37,9 +37,9 @@ export class SagaContextMediator<T extends {} = null> {
 
   /**
    * Overwrites the context with the provided context
-   * 
-   * @param context 
-   * @returns 
+   *
+   * @param context
+   * @returns
    */
   public setContext(context: T) {
     return (this.sagaContext.context = context);

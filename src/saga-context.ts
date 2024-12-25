@@ -1,6 +1,6 @@
 import { Step } from './step';
 
-export class SagaContext<T extends {} = null> {
+export class SagaContext<T extends object = null> {
   private currentStepIndex = -1;
   private disabledSteps = new Set();
 

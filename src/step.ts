@@ -1,6 +1,6 @@
 import { SagaContextMediator } from './saga-context-mediator';
 
-export class Step<T> {
+export class Step<T extends object = null> {
   private invocation: (
     sagaContextMediator: SagaContextMediator<T>,
   ) => void | Promise<void>;
